@@ -1,0 +1,439 @@
+.invalid-tooltip{display:block}
+html{
+    height: 100%; 
+}
+body#login  {
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -ms-flex-align: center;
+    -ms-flex-pack: center;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+    height: 100%;
+}
+
+#login #wrapper-login {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
+.select2-results__option[aria-selected=true] {
+    display: none;
+}
+
+.errors{
+    color:#dc3545;
+    border:1px solid #dc3545;
+    padding:.5rem 1rem;
+    border-radius:5px;
+    margin-bottom:1rem
+}
+.errors ul, .alert ul{ margin:0; list-style-position: inside; padding:0 }
+.form-group{ position:relative;}
+
+.select2-container--bootstrap4 .select2-results__group{color:#000}
+
+.toast-top-full-width#toast-container .toast{
+    max-width: none;
+    width:auto;
+    margin-left: 280px;
+    margin-right: 20px;
+    margin-top : 60px;
+    opacity:.95
+}
+.toast-top-right#toast-container .toast{
+    margin-top : 60px;
+}
+.toast-title{
+    font-size:1.3em
+}
+
+.upper-text{
+    text-transform: uppercase;
+}
+
+h1.head-title{
+    font-size:2.5em;
+    font-weight:300
+}
+.nav-item.active {
+    font-weight: bold;
+}
+.mailbox-star:hover i{
+    visibility: visible;
+}
+
+
+#modalAddPaymentMethod .modal-body {
+    background-color: transparent;
+    align-items: center;
+    padding-left: 1em;
+    box-shadow: -1px 0 0 rgba(0, 0, 0, 0.25);
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+#modalAddPaymentMethod .modal-body * {
+    font-family: 'Source Sans Pro', Open Sans, Segoe UI, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+#modalAddPaymentMethod .modal-body .fieldset {
+    margin: 0 0px 30px;
+    padding: 0;
+    margin-top: 0.7em;
+    border-style: none;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-flow: row wrap;
+    flex-flow: row wrap;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+}
+
+#card-card-expiry {}
+
+#card-card-expiry {
+    width: calc(56% - (5px / 2));
+}
+
+#card-card-cvc {
+    width: calc(40% - (5px / 2));
+}
+
+#modalAddPaymentMethod .modal-body .field {
+    padding: 10px 10px 6px;
+    background-color: rgba(0, 0, 0, 0.01);
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.18);
+    height: 2.9em;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#card-card-cvc {
+    background: url(../images/icon/cc.png) no-repeat scroll;
+    background-size: 1.7em;
+    background-position: 8em;
+    padding-left: 10px;
+}
+
+#card-card-number {
+    background: url(../images/icon/cc.png) no-repeat scroll;
+    background-size: 1.7em;
+    background-position: 8px;
+    padding-left: 60px;
+}
+
+#card-card-email {
+    background: url(../images/icon/mail.png) no-repeat scroll;
+    background-size: 1.7em;
+    background-position: 8px;
+    padding-left: 60px;
+}
+
+#card-name {
+    background: url(../images/icon/user.png) no-repeat scroll;
+    background-size: 1.7em;
+    background-position: 8px;
+    padding-left: 60px;
+}
+
+#modalAddPaymentMethod .modal-body .field.half-width {
+    width: calc(50% - (5px / 2));
+}
+
+#modalAddPaymentMethod .modal-body .field.third-width {
+    width: calc(33% - (5px / 3));
+}
+
+#modalAddPaymentMethod .modal-body .field {
+    margin-top: 12px;
+}
+
+#card-card-number,
+#card-card-expiry,
+#card-card-cvc {
+    height: 3em;
+}
+
+.InputContainer .InputElement {
+    top: 5px!important;
+}
+
+#modalAddPaymentMethod .modal-body .field.focus,
+#modalAddPaymentMethod .modal-body .field:focus {
+    color: #424770;
+    background-color: white;
+    font-weight: 600;
+}
+
+
+
+#modalAddPaymentMethod .modal-body .field.invalid.focus {
+    background-color: #f6f9fc;
+}
+
+#modalAddPaymentMethod .modal-body .field.focus::-webkit-input-placeholder,
+#modalAddPaymentMethod .modal-body .field:focus::-webkit-input-placeholder {
+    color: #cfd7df;
+}
+
+#modalAddPaymentMethod .modal-body .field.focus::-moz-placeholder,
+#modalAddPaymentMethod .modal-body .field:focus::-moz-placeholder {
+    color: #cfd7df;
+}
+
+#modalAddPaymentMethod .modal-body .field.focus:-ms-input-placeholder,
+#modalAddPaymentMethod .modal-body .field:focus:-ms-input-placeholder {
+    color: #cfd7df;
+}
+
+#modalAddPaymentMethod .modal-body input,
+#modalAddPaymentMethod .modal-body button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    border-style: none;
+}
+
+#modalAddPaymentMethod .modal-body input::-webkit-input-placeholder {
+    color: #9bacc8;
+}
+
+#modalAddPaymentMethod .modal-body input::-moz-placeholder {
+    color: #9bacc8;
+}
+
+#modalAddPaymentMethod .modal-body input:-ms-input-placeholder {
+    color: #9bacc8;
+}
+
+#modalAddPaymentMethod .modal-body button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    margin: auto;
+    background-color: #1B187F;
+    border-radius: 3px;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.8);
+}
+
+#modalAddPaymentMethod .modal-body button:active {
+    background-color: #f5be58;
+}
+
+#modalAddPaymentMethod .modal-body .error svg .base {
+    fill: #fa755a;
+}
+
+#modalAddPaymentMethod .modal-body .error svg .glyph {
+    fill: #fff;
+}
+
+#modalAddPaymentMethod .modal-body .error .message {
+    color: #fff;
+}
+
+#modalAddPaymentMethod .modal-body .success .icon .border {
+    stroke: #fcd669;
+}
+
+#modalAddPaymentMethod .modal-body .success .icon .checkmark {
+    stroke: #fff;
+}
+
+#modalAddPaymentMethod .modal-body .success .title {
+    color: #fff;
+}
+
+#modalAddPaymentMethod .modal-body .success .message {
+    color: #9cabc8;
+}
+
+#modalAddPaymentMethod .modal-body .success .reset path {
+    fill: #fff;
+}
+
+#cardWrp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    margin-left: auto;
+}
+
+.topSubImage {
+    height: 15em;
+}
+
+#modalAddPaymentMethod .modal-bodyLabel1 {
+    color: rgba(0, 0, 0, 0.7);
+    text-transform: uppercase;
+    font-size: 13px;
+}
+
+#modalAddPaymentMethod .modal-bodyLabel2 {
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* Segmentation */
+.tab-content .card {}
+.tab-content .card-header {
+    background-color: #f6f6f6;
+    color: #333b3e;
+}
+.tab-content .card-header h3 {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+.tab-content .card-body {}
+.tab-content .card-body .slider.slider-horizontal {
+    width: 100%;
+}
+
+.tab-content .card-body .form-group {}
+.tab-content .card-body .form-group label {
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.check-genre {}
+.check-genre .checkbox {
+    margin-right: 10px;
+}
+.check-genre .checkbox input {
+    display: none;
+}
+.auto_owned_container .select2-container {
+  width: initial !important;
+}
+.check-genre .checkbox label {
+    background-color: #058ec3;
+    color: #ffffff;
+    padding: 0 15px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 110px;
+}
+.check-genre .checkbox input[type='checkbox'] ~ label .fa-checkable::before{
+    content: "\f0c8";
+}
+.check-genre .checkbox input[type='radio']:checked ~ label,
+.check-genre .checkbox input[type='checkbox']:checked ~ label {
+    background-color: #04678d;
+}
+.check-genre .checkbox input[type='checkbox']:checked ~ label .fa-checkable::before{
+    content: "\f14a";
+}
+.btn-add,
+.btn-envoye {
+    background-color: #27a844;
+    color: #ffffff;
+    font-size: 16px;
+}
+.btn-delete {
+    color: #ffffff;
+    background-color: #dc3545;
+    font-size: 14px;
+    margin-right: 10px;
+}
+.btn-modif {
+    color: #ffffff;
+    background-color: #545b63;
+    font-size: 14px;
+}
+.btn-envoye {
+
+}
+
+.loader {
+    border: 2px solid #f3f3f3; /* Light grey */
+    border-top: 2px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.card-accordion {
+    margin-bottom: 5px;
+}
+
+.card-accordion-header {
+    background: #ddd;
+    border-top-left-radius:3px;
+    border-top-right-radius: 3px;
+}
+
+.card-accordion .card-body {
+    background: #EEEEEE;
+    box-shadow: none;
+    font-size: 12px;
+    color: #000;
+}
+
+.card-accordion-header button, .card-accordion-header button:hover {
+    color: #000;
+}
+.tooglable,
+.segmentationTitle{
+    cursor: pointer;
+}
+
+.segmentationContainer{
+    display: block;
+}
+
+.segmentationContainer>div{
+    float: left;
+}
+
+.ajax-segmentation-loader{
+  display: flex;
+}
+
+.badge-purple {
+    background: #7c007c;
+    color: #fff;
+}
+
+.loader-validation-campaign {
+    height: 100%;
+    width:100%;
+    margin:0;
+    background:rgba(255,255,255,0.7);
+    position:absolute;
+    top:0;
+    left:0;
+    display:flex;
+    justify-content:center;
+    align-items: center;
+}
