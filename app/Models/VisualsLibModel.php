@@ -378,17 +378,23 @@ class VisualsLibModel extends Model
         $retour = false;
         $builder = $this->db->table($this->dbVisuals);
 
+        if (isset($data['features'])):
+            $builder->select('visuals.*');
+            $builder->join('visuals_to_features', 'visuals_to_features.id_visual = visuals.id_visual');
+            $builder->whereIn('visuals_to_features.id_client_feature', $data['features']);
+        endif;
+
         if (isset($data['id_visual'])):
-            $builder->where('id_visual', $data['id_visual']);
+            $builder->where('visuals.id_visual', $data['id_visual']);
         endif;
         if (isset($data['id_company'])):
-            $builder->where('id_company', $data['id_company']);
+            $builder->where('visuals.id_company', $data['id_company']);
         endif;
         if (isset($data['id_category'])):
-            $builder->where('id_category', $data['id_category']);
+            $builder->where('visuals.id_category', $data['id_category']);
         endif;
         if (isset($data['id_user'])):
-            $builder->where('id_category', $data['id_user']);
+            $builder->where('id_user', $data['id_user']);
         endif;
 
         $query = $builder->get();

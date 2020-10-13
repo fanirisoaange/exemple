@@ -1,8 +1,10 @@
 $(document).ready(function () {
     //Form Validation
     ajax_form($('.ajax-form-features'), 'validate_feature');
+
     getVisualByAjax(3);
     getVisualByAjax(2);
+
     //Manage Visual - Change field visual by id_category
     var visual_category = $('#visual_category');
     if (visual_category.length > 0) {
@@ -96,25 +98,25 @@ function changeVisualByIdCategory(elem, data) {
         }
         if (data.category == 1) {
             /* editor = CodeMirror.fromTextArea(document.querySelector('textarea[name=visual]'), {
-                mode: 'htmlmixed',
-                styleActiveLine: true,
-                lineNumbers: true,
-                theme: "dracula",
-                autoCloseTags: true,
-                extraKeys: {
-                    "F11": function (cm) {
-                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-                    },
-                    "Esc": function (cm) {
-                        if (cm.getOption("fullScreen"))
-                            cm.setOption("fullScreen", false);
-                    }
-                }
-            });
-            $('button[name=fullscreen]').click(function (event) {
-                event.preventDefault();
-                editor.setOption("fullScreen", !editor.getOption("fullScreen"));
-            }); */
+             mode: 'htmlmixed',
+             styleActiveLine: true,
+             lineNumbers: true,
+             theme: "dracula",
+             autoCloseTags: true,
+             extraKeys: {
+             "F11": function (cm) {
+             cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+             },
+             "Esc": function (cm) {
+             if (cm.getOption("fullScreen"))
+             cm.setOption("fullScreen", false);
+             }
+             }
+             });
+             $('button[name=fullscreen]').click(function (event) {
+             event.preventDefault();
+             editor.setOption("fullScreen", !editor.getOption("fullScreen"));
+             }); */
 
             $('.summernote').summernote({
                 toolbar: [
@@ -147,8 +149,8 @@ function countSMS(elem) {
     sms_messages.text(messages + ' message(s)');
     elem.keyup(function () {
         var chars = this.value.length,
-                messages = Math.ceil(chars / 160),
-                remaining = messages * 160 - (chars % (messages * 160) || messages * 160);
+            messages = Math.ceil(chars / 160),
+            remaining = messages * 160 - (chars % (messages * 160) || messages * 160);
 
         sms_remaining.text(remaining + ' characters remaining - ');
         sms_messages.text(messages + ' message(s)');
@@ -193,57 +195,51 @@ function showPreview(elem, data) {
  */
 
 function getVisualByAjax(id_category) {
-    var data = {};
     var features;
-    if(id_category === 3){
+    if (id_category === 3) {
         features = $('select[name="features_email"]').val();
-    }else if(id_category === 2){
+    } else if (id_category === 2) {
         features = $('select[name="features_sms"]').val();
     }
-    console.log(features);
-    data['features'] = features.join(',');
-    console.log(data);
+    var data = {'features': features.join(",")};
     $.ajax({
-      type : 'POST',
-      data : JSON.stringify(data),
-      //data : data,
-      url : '/visualslib/getVisualByAjax/' + id_category,
-      beforeSend: function() {
-        $('html').css('cursor', 'wait');
-      },
-      success : function(res, statut) {
-          console.log(res); 
-        //   #listVisuals
-        var html = '';
-        var i;
-        for(i=0; i<res.visuals.length; i++){
-            console.log(res.visuals[i].visual);
-            html += '<div class="col-md-3">'+
-                        '<div id="visual-preview" class="card" style="min-height: 250px;">'+
-                            '<div class="card-body">' + 
-                                '<div class="preview">'+
-                                    res.visuals[i].visual +
-                                '</div>' +
-                            '</div>' +
-                        '</div>' +
+        type: 'POST',
+        data: 'data=' + JSON.stringify(data),
+        url: '/visualslib/getVisualByAjax/' + id_category,
+        beforeSend: function () {
+            $('html').css('cursor', 'wait');
+        },
+        success: function (res, statut) {
+            var html = '';
+            var i;
+            for (i = 0; i < res.visuals.length; i++) {
+                console.log(res.visuals[i].visual);
+                html += '<div class="col-md-3">' +
+                    '<div id="visual-preview" class="card" style="min-height: 250px;">' +
+                    '<div class="card-body">' +
+                    '<div class="preview">' +
+                    res.visuals[i].visual +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
                     '</div>';
-        }
-        if(id_category === 3){
-            $('#listVisuals_email').html(html);
-        }else if(id_category === 2){
-            $('#listVisuals_sms').html(html);
-        }else{
-            $('#listVisuals_email').html(html);
-        }
+            }
+            if (id_category === 3) {
+                $('#listVisuals_email').html(html);
+            } else if (id_category === 2) {
+                $('#listVisuals_sms').html(html);
+            } else {
+                $('#listVisuals_email').html(html);
+            }
 
-      },
-      error : function (request, status, error) {
-          toastr.error(error.message, 'Error');
-      },
-      complete: function() {
-        $('html').css('cursor', 'default');
-      },
-      dataType : 'json'
+        },
+        error: function (request, status, error) {
+            toastr.error(error.message, 'Error');
+        },
+        complete: function () {
+            $('html').css('cursor', 'default');
+        },
+        dataType: 'json'
     });
-  }
+}
 

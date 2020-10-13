@@ -96,10 +96,8 @@ class Visualslib extends BaseController
      */
     public function getVisualByAjax(int $id_category = null)
     {
-//        $id_category = isset($data_filter['id_category']) ? $data_filter['id_category'] : null;
         $id_company = $this->session->current_main_company;
-        $features = $this->input->post('features');
-//        $data = $this->input->post();
+        $post = json_decode($this->request->getPost('data'));
         $users = [];
         $companyFeatureSeletected = null;
         $user_id = (int)session('user_id');
@@ -107,7 +105,10 @@ class Visualslib extends BaseController
             throw new Exception("Invalid User");
         }
         $filters = array('id_category' => $id_category, 'id_company' => $id_company);
-//        if ($features) $filters['features'] = $features;
+        if ($post->features) {
+            $features = explode (",", $post->features);
+            $filters['features'] = $features;
+        }
         $visuals = $this->VLM->getVisuals($filters);
         $company_features = $this->VLM->getCompanyFeatures();
         $title = ($id_category == 3) ? 'Visuals(email)' : 'Visuals(sms)';
