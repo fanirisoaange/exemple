@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 
+use App\Enum\VisualCategories;
 use CodeIgniter\Model;
 
 class VisualsLibModel extends Model
@@ -12,7 +13,7 @@ class VisualsLibModel extends Model
     protected $db;
 
     /*
-     * ['id_category' => 1, 'id_parent' => 0, 'name' => 'Landing', 'created' => time()],
+     * ['id_category' => 0, 'id_parent' => 0, 'name' => 'Landing', 'created' => time()],
       ['id_category' => 2, 'id_parent' => 0, 'name' => 'Email', 'created' => time()],
       ['id_category' => 3, 'id_parent' => 0, 'name' => 'SMS', 'created' => time()],
      * ['id_category' => 4, 'id_parent' => 0, 'name' => 'Banners', 'created' => time()],
@@ -171,28 +172,16 @@ class VisualsLibModel extends Model
         $visualRules = '';
         $visualLabel = 'Visual code / url';
         $visualType = 'textarea';
-        if (!empty($data['id_category'])):
-            if ($cat = $this->getCategory(['id_category' => $data['id_category']])):
-                switch ($cat['id_parent']):
+        if (!empty($data['category'])):
+                switch ($data['category']):
                     case 1:
-                        $visualLabel = 'Landing URL';
-                        $visualType = 'text';
-                        $visualRules .= '|valid_url';
-                        break;
-                    case 2:
                         $visualLabel = 'Email HTML code';
                         break;
-                    case 3:
+                    case 2:
                         $visualLabel = 'SMS Text';
                         $visualRules .= '|max_length[140]';
                         break;
-                    case 4:
-                        $visualLabel = 'Banner image URL';
-                        $visualType = 'text';
-                        $visualRules .= '|valid_url';
-                        break;
                 endswitch;
-            endif;
         endif;
         $form = [
             'main_company_id' => [
@@ -240,57 +229,38 @@ class VisualsLibModel extends Model
         return $form;
     }
 
-    public function formVisualCode($parent_category_id = false, $data = false)
+
+    public function formVisualCode($category = false, $data = false)
     {
-        //$parent_category_id = 1;
-        if (!empty($data['id_category']) && !$parent_category_id):
-            if ($cat = $this->getCategory(['id_category' => $data['id_category']])):
-                $parent_category_id = $cat['id_parent'];
-            endif;
+        if (!empty($data['category']) && !$category):
+            $category = $data['category'];
         endif;
         $addID = [];
         $visualRules = '';
         $rules_url_sms = 'string';
         $visualLabel = 'Visual code / url';
         $visualType = 'textarea';
-        switch ($parent_category_id):
+        switch ($category):
             case 1:
-                $visualLabel = 'Landing URL';
-                $visualType = 'text';
-                $visualRules = '|valid_url|regex_match[/^(?:([^:]*)\:)?\/\/(.+)$/]';
-                break;
-            case 2:
                 $visualLabel = 'Email HTML code';
                 break;
-            case 3:
+            case 2:
                 $visualLabel = 'SMS Text';
                 $visualRules = '|max_length[140]';
                 $rules_url_sms = 'required|valid_url|regex_match[/^(?:([^:]*)\:)?\/\/(.+)$/]';
                 $addID = ['id' => 'visual-sms'];
-                break;
-            case 4:
-                $visualLabel = 'Banner image URL';
-                $visualType = 'text';
-                $visualRules .= '|valid_url|regex_match[/^(?:([^:]*)\:)?\/\/(.+)$/]';
-                break;
+            break;
             default:
-
                 break;
         endswitch;
 
         return $form = [
-            'parent_category_id' => [
-                'field' => 'parent_category_id',
-                'label' => 'parent_category_id',
-                'post' => $parent_category_id,
-                'rules' => 'required'
-            ],
-            'id_category' => [
-                'field' => 'id_category',
+            'category' => [
+                'field' => 'category',
                 'label' => 'Category',
-                'post' => isset($data['id_category']) ? $data['id_category'] : '',
+                'post' => isset($data['category']) ? $data['category'] : '',
                 'rules' => 'required',
-                'options' => $this->optionsCategories(),
+                'options' => VisualCategories::getAll(),
                 'extra' => ['class' => 'custom-select select2'],
             ],
             'sms_url' => [
@@ -374,6 +344,31 @@ class VisualsLibModel extends Model
     }
 
     /**
+     * Form Features Visual
+     * @param type $features
+     * @param type $data
+     * @return array
+     */
+    public function form_features($features, $data = false)
+    {
+
+        $assocFeatures = [];
+        if ($features){
+            foreach( $features as $key => $value) {
+                $assocFeatures[$value['id_client_feature']] = $value['name'];
+            }
+        }
+
+        return[
+            'field' => 'id_client_feature',
+            'label' => trad('Features'),
+            'post' => isset($data['id_client_feature']) ? $data['id_client_feature'] : '',
+            'options' => $assocFeatures,
+            'rules' => 'required'
+        ];
+    }
+
+    /**
      * Get Visuals
      * @param type $data
      * return array
@@ -445,7 +440,10 @@ class VisualsLibModel extends Model
     public function insertUpdateVisual($post, $table, $id_visual = false)
     {
         $return = false;
-
+        echo '<pre style="background-color:#fff; color:#000 ; margin:150px">';
+        echo 'ijer cat';
+        var_dump($post);
+        echo '</pre>';
         /**
          * Traitement des différents type de visuels
          */
@@ -525,9 +523,9 @@ class VisualsLibModel extends Model
         $thumb = false;
         $this->utils = \Config\Services::utils($this->db);
         switch ($category_parent):
-            case 1: //Landing
+            case 3: //Landing
                 //On génère la miniature via API
-                $is_mobile = in_array($visual['id_category'], [18]) ? true : false;
+                $is_mobile = in_array($visual['category'], [18]) ? true : false;
                 $view = $is_mobile ? 'landing-mobile' : 'landing-desktop';
 
                 if ($regen || empty($visual['thumbnail'])):
@@ -549,13 +547,13 @@ class VisualsLibModel extends Model
                     $return = view('visualsLib/thumbnailViews/' . $view, ['visual_name' => $thumb]);
                 endif;
                 break;
-            case 2: //Email
+            case 1: //Email
                 $label = 'Email HTML code';
                 $return = view('visualsLib/thumbnailViews/html-frame', $visual);
                 break;
-            case 3: //SMS
+            case 2: //SMS
                 $label = 'SMS Text';
-                $return = $visual['id_category'] == 22 ? view('visualsLib/thumbnailViews/sms-oneclick', $visual) : view('visualsLib/thumbnailViews/sms', $visual) ;
+                $return = $visual['category'] == 22 ? view('visualsLib/thumbnailViews/sms-oneclick', $visual) : view('visualsLib/thumbnailViews/sms', $visual) ;
                 break;
             default :
                 //Rien

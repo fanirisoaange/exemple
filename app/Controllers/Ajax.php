@@ -61,31 +61,19 @@ class Ajax extends BaseController
     public function getCategoryParent($post)
     {
         $this->VLM = model('VisualsLibModel', true, $this->db);
-        if (!empty($post['id_category'])):
-            if ($cat = $this->VLM->getCategory(['id_category' => $post['id_category']])):
-                $is_sms = false;
-                switch ($cat['id_parent']):
-                    case 1:
-                        $label = 'Landing URL';
-                        break;
-                    case 2:
-                        $label = 'Email HTML code';
-                        break;
-                    case 3:
-                        $label = 'SMS Text';
-                        $is_sms = 'visual-sms';
-                        break;
-                    case 4:
-                        $label = 'Banner image URL';
-                        break;
-                endswitch;
+        if (!empty($post['category'])):
+            $is_sms = false;
 
-                if ($cat['id_parent'] == 2 || $cat['id_parent'] == 3):
-                    $return = ['return' => 'ok', 'type' => 'textarea', 'label' => $label, 'is_sms' => $is_sms, 'parent_category_id' => $cat['id_parent']];
-                else:
-                    $return = ['return' => 'ok', 'type' => 'text', 'label' => $label, 'is_sms' => $is_sms, 'parent_category_id' => $cat['id_parent']];
-                endif;
-            endif;
+            switch ($post['category']):
+                case 1:
+                    $label = 'Email HTML code';
+                    break;
+                case 2:
+                    $label = 'SMS Text';
+                    break;
+            endswitch;
+
+            $return = ['return' => 'ok', 'type' => 'textarea', 'label' => $label, 'is_sms' => $is_sms, 'category' => $post['category']];
         endif;
         return $return;
     }
@@ -97,9 +85,9 @@ class Ajax extends BaseController
     {
         $return = false;
         $this->VLM = model('VisualsLibModel', true, $this->db);
-        if (!empty($post['parent_category_id'])):
+        if (!empty($post['category'])):
             $regen = !empty($post['regen']) ? true : false;
-            if ($thumbnail = $this->VLM->generateThumbnail($post['parent_category_id'], $post, $regen)):
+            if ($thumbnail = $this->VLM->generateThumbnail($post['category'], $post, $regen)):
                 $return = $post;
                 $return += [
                     'return' => 'ok',

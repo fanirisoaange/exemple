@@ -275,7 +275,11 @@ class CompanyModel extends Model
         $countries = $country_model = new CountryModel;
         //|is_unique[companies.fiscal_name]
         $form = [
-            'main_id' => ['field' => 'main_id', 'label' => trad('Main company', 'company'), 'post' => isset($data['main_id']) ? $data['main_id'] : '', 'options' => $this->getMainCompaniesOptions(), 'rules' => 'required'],
+            'main_id' => ['field' => 'main_id',
+                'label' => trad('Main company', 'company'),
+                'post' => isset($data['main_id']) ? $data['main_id'] : '',
+                'options' => $this->getMainCompaniesOptions(),
+                'rules' => 'required'],
             'parent_id' => ['field' => 'parent_id', 'label' => trad('Parent company', 'company'), 'post' => isset($data['parent_id']) ? $data['parent_id'] : '', 'options' => $this->getChildrenCompaniesOptions(isset($data['main_id']) ? $data['main_id'] : null), 'rules' => 'string'],
             'fiscal_name' => ['field' => 'fiscal_name', 'label' => trad('Fiscal name', 'company'), 'post' => isset($data['fiscal_name']) ? $data['fiscal_name'] : '', 'rules' => 'required'],
             'commercial_name' => ['field' => 'commercial_name', 'label' => trad('Commercial name', 'company'), 'post' => isset($data['commercial_name']) ? $data['commercial_name'] : '', 'rules' => 'string'],

@@ -11,7 +11,6 @@
                         $hiddens = [
                             'id_user' => session()->get('user_id'),
                             'visibility' => 0,
-                            $formVisualCode['parent_category_id']['field'] => $formVisualCode['parent_category_id']['post'],
                             $form_visual['main_company_id']['field'] => $form_visual['main_company_id']['post']
                             ]
 
@@ -24,8 +23,10 @@
                         ?>
                         <?= form_open('', ['id' => 'visual-form'], $hiddens) ?>
                         <?= custom_input($form_visual['name'], ['class' => 'form-control']) ?>
-                        <?php //if ($action == 'add'): ?>
-                        <?= custom_dropdown($formVisualCode['id_category'], ['id' => 'visual-id_category', 'class' => 'select2 custom-select']) ?>
+                        <?= form_label(trad('Features')) ?>
+                        <?= form_dropdown('features[]', $form_feat['options'], $form_feat['post'],'class="form-control select2" id="features" multiple') ?>
+                        <?= form_hidden('defaultFeatures', $form_feat['post']) ?>
+                        <?= custom_dropdown($formVisualCode['category'], ['id' => 'visual_category', 'class' => 'select2 custom-select']) ?>
                         <?php
                         if ($formVisualCode['visual']['type'] == 'textarea'):
                             $display_textarea = '';
@@ -52,7 +53,7 @@
 
                                 ?>
                                 <?= form_label(trad($formVisualCode['visual']['label'])); ?>
-                                <?=
+                                <!--?=
                                 form_button([
                                     'name' => 'fullscreen',
                                     'value' => 1,
@@ -61,13 +62,27 @@
                                     'class' => 'btn btn-light float-right'
                                 ]);
 
-                                ?>
+                                ?-->
                                 <span class="clearfix"></span>
-                                <?= form_textarea($formVisualCode['visual']['field'], $formVisualCode['visual']['post'], ['id' => 'visual', 'class' => 'form-control' . $classError] + $disabled_textarea + $formVisualCode['visual']['addID']) ?>
+                                <?= form_textarea($formVisualCode['visual']['field'], $formVisualCode['visual']['post'], ['id' => 'visual', 'class' => 'form-control summernote' . $classError]) ?>
                                 <?= $validation->showError($formVisualCode['visual']['field']); ?> 
                                 <small class="form-text text-muted"><span id="sms-remaining"></span> <span id="sms-message"></span></small>
                             </div>
                         </div>
+                        <!--div class="card-body card-body-content" style="display: block;padding: 15px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <?= form_label(trad('Html')) ?><span class="text-red">*</span>
+                                    <textarea name="html" id=""
+                                              class="form-control summernote"
+                                              cols="30" rows="10">
+                                        <?=  ""; ?>
+                                    </textarea>
+                                </div>
+                            </div>
+                        </div>
+                        </div-->
                         <div id="visual-field-text" class="visual-field"<?= $display_text ?>>
                             <?= custom_input($formVisualCode['visual'], ['class' => 'form-control'] + $disabled_text) ?>
                         </div>
@@ -132,7 +147,7 @@
                         </div>
                     </div>
                     <?php if (!empty($form_features) && is_array($form_features) && count($form_features) > 0): ?>
-                        <div class="card">
+                        <!--div class="card">
                             <div class="card-header bg-secondary"><?= trad('Features') ?></div>
                             <div class="card-body">
                                 <?php
@@ -145,7 +160,7 @@
 
                                 ?> 
                             </div>
-                        </div>
+                        </div-->
                     <?php endif; ?>
 
                 <?php endif; ?>

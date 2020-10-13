@@ -1,14 +1,15 @@
 $(document).ready(function () {
     //Form Validation
     ajax_form($('.ajax-form-features'), 'validate_feature');
-
+    getVisualByAjax(3);
+    getVisualByAjax(2);
     //Manage Visual - Change field visual by id_category
-    var visual_id_category = $('#visual-id_category');
-    if (visual_id_category.length > 0) {
-        changeVisualByIdCategoryAjax(visual_id_category.val());
-        visual_id_category.change(function () {
-            var id_category = $(this).val();
-            changeVisualByIdCategoryAjax(id_category);
+    var visual_category = $('#visual_category');
+    if (visual_category.length > 0) {
+        changeVisualByIdCategoryAjax(visual_category.val());
+        visual_category.change(function () {
+            var category = $(this).val();
+            changeVisualByIdCategoryAjax(category);
         });
     }
 
@@ -19,13 +20,13 @@ $(document).ready(function () {
 
     if ($('#visual-preview').length > 0 && $('#visual-form').length > 0) {
         var data_form = $('#visual-form').serializeObject();
-        var parent_category_id = data_form.parent_category_id;
+        var category = data_form.category;
         getPreview(data_form, $('#visual-preview'));
     }
 
     $('#refresh-thumb').click(function () {
         var data_form = $('#visual-form').serializeObject();
-        var parent_category_id = data_form.parent_category_id;
+        var category = data_form.category;
         getPreview(data_form, $('#visual-preview'));
     });
 
@@ -38,11 +39,24 @@ $(document).ready(function () {
         });
     });
 
+    $('select.select2').select2();
+
+    $("#id_client_feature").select2({
+        placeholder: "Please choose one or more features",
+        allowClear: true
+    });
+
+    var features = $('input[name="defaultFeatures"]').val();
+    if (features) {
+        $('#features').val(features.split(',')).trigger('change');
+        console.log(features);
+    }
+
 });
-function changeVisualByIdCategoryAjax(id_category) {
-    if (id_category != '') {
+function changeVisualByIdCategoryAjax(category) {
+    if (category != '') {
         var data_ajax = {
-            id_category: id_category,
+            category: category,
             action: 'getCategoryParent'
         };
         ajax_function(data_ajax, changeVisualByIdCategory, $('#visual-field'));
@@ -58,10 +72,10 @@ function changeVisualByIdCategory(elem, data) {
     }
     if (data.return == 'ok') {
         //On refresh parent_category_id
-        if ($('#visual-form').find('input[type=hidden][name=parent_category_id]').length > 0) {
-            $('input[type=hidden][name=parent_category_id]').val(data.parent_category_id);
+        if ($('#visual-form').find('input[type=hidden][name=category]').length > 0) {
+            $('input[type=hidden][name=categor]').val(data.category);
         } else {
-            $('#visual-form').append('<input type="hidden" name="parent_category_id" value="' + data.parent_category_id + '" style="display:none;">');
+            $('#visual-form').append('<input type="hidden" name="category" value="' + data.category + '" style="display:none;">');
         }
 
         $('.visual-field').hide();
@@ -80,8 +94,8 @@ function changeVisualByIdCategory(elem, data) {
             sms_remaining.empty();
             sms_messages.empty();
         }
-        if (data.parent_category_id == 2) {
-            editor = CodeMirror.fromTextArea(document.querySelector('textarea[name=visual]'), {
+        if (data.category == 1) {
+            /* editor = CodeMirror.fromTextArea(document.querySelector('textarea[name=visual]'), {
                 mode: 'htmlmixed',
                 styleActiveLine: true,
                 lineNumbers: true,
@@ -100,7 +114,22 @@ function changeVisualByIdCategory(elem, data) {
             $('button[name=fullscreen]').click(function (event) {
                 event.preventDefault();
                 editor.setOption("fullScreen", !editor.getOption("fullScreen"));
+            }); */
+
+            $('.summernote').summernote({
+                toolbar: [
+                    ["style", ["style"]],
+                    ["font", ["bold", "underline", "clear"]],
+                    ["fontname", ["fontname"]],
+                    ["color", ["color"]],
+                    ["para", ["ul", "ol", "paragraph"]],
+                    ["insert", ["link", "picture"]],
+                    ["view", ["codeview"]]
+                ],
             });
+
+        } else {
+            $('.summernote').summernote('destroy')
         }
     }
 }
@@ -136,8 +165,7 @@ function getPreview(data, elem) {
     elem.append(card_overlay);
     var data_ajax = {
         id_visual: data.id_visual,
-        id_category: data.id_category,
-        parent_category_id: data.parent_category_id,
+        category: data.category,
         visual: data.visual,
         sms_url: data.sms_url,
         name: data.name,
@@ -151,10 +179,61 @@ function showPreview(elem, data) {
     if (data.return == 'ok') {
         elem.find('.preview').hide().empty().append(data.thumb).delay(100).slideDown(200);
         //On masque ou on affiche le bouton d'agrandissement
-        if (data.parent_category_id == 2) {
+        if (data.category == 1) {
             $('#enlarge-thumb').show();
         } else {
             $('#enlarge-thumb').hide();
         }
     }
 }
+
+
+/**
+ * Gestion affichage tab
+ */
+
+function getVisualByAjax(id_category) {
+    var data = {'id_category': id_category};
+    $.ajax({
+      type : 'POST',
+      data : 'data=' + JSON.stringify(data),
+      url : '/visualslib/getVisualByAjax/' + id_category,
+      beforeSend: function() {
+        $('html').css('cursor', 'wait');
+      },
+      success : function(res, statut) {
+          console.log(res); 
+        //   #listVisuals
+        var html = '';
+        var i;
+        for(i=0; i<res.visuals.length; i++){
+            console.log(res.visuals[i].visual);
+            html += '<div class="col-md-3">'+
+                        '<div id="visual-preview" class="card" style="min-height: 250px;">'+
+                            '<div class="card-body">' + 
+                                '<div class="preview">'+
+                                    res.visuals[i].visual +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>';
+        }
+        if(id_category === 3){
+            $('#listVisuals_email').html(html);
+        }else if(id_category === 2){
+            $('#listVisuals_sms').html(html);
+        }else{
+            $('#listVisuals_email').html(html);
+        }
+
+      },
+      error : function (request, status, error) {
+          toastr.error(error.message, 'Error');
+      },
+      complete: function() {
+        $('html').css('cursor', 'default');
+      },
+      dataType : 'json'
+    });
+  }
+

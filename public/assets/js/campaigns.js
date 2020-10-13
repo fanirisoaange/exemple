@@ -165,6 +165,7 @@ $(document).ready(function () {
 
     var channel = $('input[name="defaultChannel"]').val();
     if (channel) {
+        console.log(channel);
         $('#channel').val(channel.split(',')).trigger('change');
     }
 
