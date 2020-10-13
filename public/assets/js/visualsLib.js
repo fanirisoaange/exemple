@@ -193,10 +193,20 @@ function showPreview(elem, data) {
  */
 
 function getVisualByAjax(id_category) {
-    var data = {'id_category': id_category};
+    var data = {};
+    var features;
+    if(id_category === 3){
+        features = $('select[name="features_email"]').val();
+    }else if(id_category === 2){
+        features = $('select[name="features_sms"]').val();
+    }
+    console.log(features);
+    data['features'] = features.join(',');
+    console.log(data);
     $.ajax({
       type : 'POST',
-      data : 'data=' + JSON.stringify(data),
+      data : JSON.stringify(data),
+      //data : data,
       url : '/visualslib/getVisualByAjax/' + id_category,
       beforeSend: function() {
         $('html').css('cursor', 'wait');

@@ -61,16 +61,12 @@ class Visualslib extends BaseController
     {
         $users = [];
         $companyFeatureSeletected = null;
-        $user_id = (int) session('user_id');
+        $user_id = (int)session('user_id');
         if (!$user_id) {
             throw new Exception("Invalid User");
         }
-        // var_dump($user_id);die;
-        // print_r($user_id);
         $visuals = $this->VLM->getVisuals();
         $company_features = $this->VLM->getCompanyFeatures();
-        // var_dump($company_features);die;
-        // var_dump($visuals);die;
         $data = array(
             'title' => trad('Visuals Library', 'visual'),
             'metadescription' => trad('List of visuals', 'visual'),
@@ -94,18 +90,25 @@ class Visualslib extends BaseController
         ]);
         return $layout->view('visualsLib/index', $data);
     }
+
     /**
      * Liste des Visual par Ajax
      */
     public function getVisualByAjax(int $id_category = null)
     {
+//        $id_category = isset($data_filter['id_category']) ? $data_filter['id_category'] : null;
+        $id_company = $this->session->current_main_company;
+        $features = $this->input->post('features');
+//        $data = $this->input->post();
         $users = [];
         $companyFeatureSeletected = null;
-        $user_id = (int) session('user_id');
+        $user_id = (int)session('user_id');
         if (!$user_id) {
             throw new Exception("Invalid User");
         }
-        $visuals = $this->VLM->getVisuals(array('id_category' => $id_category));
+        $filters = array('id_category' => $id_category, 'id_company' => $id_company);
+//        if ($features) $filters['features'] = $features;
+        $visuals = $this->VLM->getVisuals($filters);
         $company_features = $this->VLM->getCompanyFeatures();
         $title = ($id_category == 3) ? 'Visuals(email)' : 'Visuals(sms)';
         $data = array(
@@ -136,7 +139,7 @@ class Visualslib extends BaseController
         $thumbnail = false;
         $category = false;
         // $data_visual = false;
-      
+
         //EDit visual
         if ($id_visual) :
             $get_visual = $this->VLM->getVisuals(['id_visual' => $id_visual]);
@@ -144,9 +147,9 @@ class Visualslib extends BaseController
                 return redirect()->to(route_to('visual_manage'));
             else :
                 $data_visual = $post ? $post : $get_visual;
-            /* echo '<p style="background-color:#fff; color:#000; margin: 50px">';
-                print_r($data_visual);
-                echo '</p>'; */
+                /* echo '<p style="background-color:#fff; color:#000; margin: 50px">';
+                    print_r($data_visual);
+                    echo '</p>'; */
             endif;
             $action = 'edit';
             $category = $data_visual['id_category'];
@@ -160,7 +163,7 @@ class Visualslib extends BaseController
             $category = false;
             // var_dump("Here on add");die;
         endif;
-    
+
         /**
          * Form Visual
          */
@@ -170,7 +173,6 @@ class Visualslib extends BaseController
         if (isset($post['add_visual'])) :
             if ($this->validate($form_visual + $formVisualCode)) :
                 $upd_id = !empty($post['id_visual']) ? ['id_visual' => $post['id_visual']] : false;
-
                 $send = $this->utils->insertOrUpdate($post, 'visuals', $upd_id);
                 if ($send['action'] == 'insert' && !empty($send['insertId'])) :
                     return redirect()->to(route_to('visual_manage') . '/' . $send['insertId']);
@@ -198,6 +200,8 @@ class Visualslib extends BaseController
         /**
          * View
          */
+
+//        var_dump($formVisualCode);die;
 
         $this->data += [
             'page_title' => '<i class="nav-icon far fa-images"></i> Visuals Library',
@@ -350,11 +354,10 @@ class Visualslib extends BaseController
         echo '<br /><br /><br />';
         $pattern = "/(?:<[^>]+\s)(on\S+)=[\"']?((?:.(?![\"']?\s+(?:\S+)=|[>\"']))+.)[\"']?/";
         echo '<xmp>' . preg_replace(
-            $pattern,
-            '',
-            $tidy
-        ) . '</xmp>';
-
+                $pattern,
+                '',
+                $tidy
+            ) . '</xmp>';
 
 
         preg_match_all(

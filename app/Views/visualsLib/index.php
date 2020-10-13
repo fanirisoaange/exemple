@@ -10,7 +10,7 @@
             <?php echo trad('Filters') ?>
             <div class="col-md-3">
                 <div class="form-group">
-                    <select name="users" class="custom-select" id="users" data="" class="selectpicker">
+                    <select name="features_email" id="features_email" data="" class="form-control select2" multiple onchange="getVisualByAjax(3)">
                         <?php foreach ($company_features as $company_feature) { ?>
                             <option <?php if ($company_feature['id_client_feature'] == $companyFeatureSeletected) { ?>selected<?php } ?> value="<?php echo $company_feature['id_client_feature']; ?>">
                                 <?php echo $company_feature['name']; ?>
@@ -29,7 +29,7 @@
             <?php echo trad('Filters') ?>
             <div class="col-md-3">
                 <div class="form-group">
-                    <select name="users" class="custom-select" id="users" data="">
+                    <select name="features_sms" id="features_sms" data="" class="form-control select2" multiple onchange="getVisualByAjax(2)">
                         <?php foreach ($company_features as $company_feature) { ?>
                             <option <?php if ($company_feature['id_client_feature'] == $companyFeatureSeletected) { ?>selected<?php } ?> value="<?php echo $company_feature['id_client_feature']; ?>">
                                 <?php echo $company_feature['name']; ?>
