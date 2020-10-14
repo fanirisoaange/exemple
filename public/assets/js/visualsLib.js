@@ -2,8 +2,9 @@ $(document).ready(function () {
     //Form Validation
     ajax_form($('.ajax-form-features'), 'validate_feature');
 
-    getVisualByAjax(1);
-    getVisualByAjax(2);
+    //var viewList = $("select[name=index-view]").val();
+    if( $('#index-view').length )getVisualByAjax(1);
+    //getVisualByAjax(2);
 
     //Manage Visual - Change field visual by id_category
     var visual_category = $('#visual_category');
@@ -74,7 +75,7 @@ function changeVisualByIdCategory(elem, data) {
     if (data.return == 'ok') {
         //On refresh parent_category_id
         if ($('#visual-form').find('input[type=hidden][name=category]').length > 0) {
-            $('input[type=hidden][name=categor]').val(data.category);
+            $('input[type=hidden][name=category]').val(data.category);
         } else {
             $('#visual-form').append('<input type="hidden" name="category" value="' + data.category + '" style="display:none;">');
         }
@@ -202,8 +203,10 @@ function getVisualByAjax(category) {
     // } else if (category === 2) {
     //     features = $('select[name="features_sms"]').val();
     // }
-    //if(features){
-    var data = {'features': features.join(",")};
+
+    features = (features) ? features.join(",") : null;
+
+    var data = {'features': features};
     $.ajax({
         type: 'POST',
         data: 'data=' + JSON.stringify(data),

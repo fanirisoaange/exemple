@@ -1,4 +1,4 @@
-<nav class="nav-tabs-custom">
+<nav class="nav-tabs-custom" id="index-view">
     <div class="nav nav-tabs nav-tabs-custom" id="nav-tab" role="tablist">
         <?php foreach ($visual_categories as $key => $visual_category) { ?>
             <a class="nav-item nav-link <?php echo ($key == 1) ? "active" : ""; ?>" onclick="getVisualByAjax(<?php echo $key ?>);" id="nav-home-tab-<?php echo $key ?>" data-toggle="tab" href="#nav-home-<?php echo $key ?>" role="tab" aria-controls="nav-home-<?php echo $key ?>" aria-selected="true">

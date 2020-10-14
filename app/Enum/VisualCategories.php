@@ -9,8 +9,8 @@ class VisualCategories extends Enumeration
 
     protected static $descriptions
         = [
-            self::EMAIL               => 'Email',
-            self::SMS          => 'SMS',
+            self::EMAIL => 'Email',
+            self::SMS => 'SMS',
         ];
 
     public static function getDescriptions(): array

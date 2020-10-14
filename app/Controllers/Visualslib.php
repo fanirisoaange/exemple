@@ -139,6 +139,7 @@ class Visualslib extends BaseController
     public function manage($id_visual = false)
     {
         $post = $this->request->getPost();
+//        var_dump($post);die;
         $thumbnail = false;
         $category = false;
         //EDit visual
