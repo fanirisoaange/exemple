@@ -1,7 +1,7 @@
 <nav class="nav-tabs-custom">
     <div class="nav nav-tabs nav-tabs-custom" id="nav-tab" role="tablist">
         <?php foreach ($visual_categories as $key => $visual_category) { ?>
-            <a class="nav-item nav-link <?php echo ($key == 1) ? "active" : ""; ?>" onclick="getVisualByAjax(<?php echo $key ?>);" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">
+            <a class="nav-item nav-link <?php echo ($key == 1) ? "active" : ""; ?>" onclick="getVisualByAjax(<?php echo $key ?>);" id="nav-home-tab-<?php echo $key ?>" data-toggle="tab" href="#nav-home-<?php echo $key ?>" role="tab" aria-controls="nav-home-<?php echo $key ?>" aria-selected="true">
                 <?php echo $visual_category ?>
             </a>
         <?php } ?>
@@ -11,7 +11,7 @@
 </nav>
 <div class="tab-content" id="nav-tabContent">
     <?php foreach ($visual_categories as $key => $visual_category) { ?>
-        <div class="tab-pane fade <?php echo ($key == 1) ? "show active" : ""; ?>" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+        <div class="tab-pane fade <?php echo ($key == 1) ? "show active" : ""; ?>" id="nav-home-<?php echo $key ?>" role="tabpanel" aria-labelledby="nav-home-tab-<?php echo $key ?>">
             <div class="row" style="margin-top:20px;">
                 <?php echo trad('Filters') ?>
                 <div class="col-md-3">
