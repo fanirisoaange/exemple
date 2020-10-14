@@ -2,8 +2,8 @@ $(document).ready(function () {
     //Form Validation
     ajax_form($('.ajax-form-features'), 'validate_feature');
 
-    getVisualByAjax(3);
-    getVisualByAjax(2);
+    getVisualByAjax(1);
+    // getVisualByAjax(2);
 
     //Manage Visual - Change field visual by id_category
     var visual_category = $('#visual_category');
@@ -51,7 +51,6 @@ $(document).ready(function () {
     var features = $('input[name="defaultFeatures"]').val();
     if (features) {
         $('#features').val(features.split(',')).trigger('change');
-        console.log(features);
     }
 
 });
@@ -98,25 +97,25 @@ function changeVisualByIdCategory(elem, data) {
         }
         if (data.category == 1) {
             /* editor = CodeMirror.fromTextArea(document.querySelector('textarea[name=visual]'), {
-             mode: 'htmlmixed',
-             styleActiveLine: true,
-             lineNumbers: true,
-             theme: "dracula",
-             autoCloseTags: true,
-             extraKeys: {
-             "F11": function (cm) {
-             cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-             },
-             "Esc": function (cm) {
-             if (cm.getOption("fullScreen"))
-             cm.setOption("fullScreen", false);
-             }
-             }
-             });
-             $('button[name=fullscreen]').click(function (event) {
-             event.preventDefault();
-             editor.setOption("fullScreen", !editor.getOption("fullScreen"));
-             }); */
+                mode: 'htmlmixed',
+                styleActiveLine: true,
+                lineNumbers: true,
+                theme: "dracula",
+                autoCloseTags: true,
+                extraKeys: {
+                    "F11": function (cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function (cm) {
+                        if (cm.getOption("fullScreen"))
+                            cm.setOption("fullScreen", false);
+                    }
+                }
+            });
+            $('button[name=fullscreen]').click(function (event) {
+                event.preventDefault();
+                editor.setOption("fullScreen", !editor.getOption("fullScreen"));
+            }); */
 
             $('.summernote').summernote({
                 toolbar: [
@@ -189,57 +188,61 @@ function showPreview(elem, data) {
     }
 }
 
-
 /**
  * Gestion affichage tab
  */
 
-function getVisualByAjax(id_category) {
+function getVisualByAjax(category) {
     var features;
-    if (id_category === 3) {
-        features = $('select[name="features_email"]').val();
-    } else if (id_category === 2) {
-        features = $('select[name="features_sms"]').val();
-    }
-    var data = {'features': features.join(",")};
-    $.ajax({
-        type: 'POST',
-        data: 'data=' + JSON.stringify(data),
-        url: '/visualslib/getVisualByAjax/' + id_category,
-        beforeSend: function () {
-            $('html').css('cursor', 'wait');
-        },
-        success: function (res, statut) {
-            var html = '';
-            var i;
-            for (i = 0; i < res.visuals.length; i++) {
-                console.log(res.visuals[i].visual);
-                html += '<div class="col-md-3">' +
-                    '<div id="visual-preview" class="card" style="min-height: 250px;">' +
-                    '<div class="card-body">' +
-                    '<div class="preview">' +
-                    res.visuals[i].visual +
-                    '</div>' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
-            }
-            if (id_category === 3) {
-                $('#listVisuals_email').html(html);
-            } else if (id_category === 2) {
-                $('#listVisuals_sms').html(html);
-            } else {
-                $('#listVisuals_email').html(html);
-            }
+    // if (category === 3) {
+    features = $("select[name=features_"+category+"]").val();
+    // } else if (category === 2) {
+    //     features = $('select[name="features_sms"]').val();
+    // }
+    if(features){
+        var data = {'features': features.join(",")};
+        $.ajax({
+            type: 'POST',
+            data: 'data=' + JSON.stringify(data),
+            url: '/visualslib/getVisualByAjax/' + category,
+            beforeSend: function () {
+                $('html').css('cursor', 'wait');
+            },
+            success: function (res, statut) {
+                var html = '';
+                var i;
+                for (i = 0; i < res.visuals.length; i++) {
+                    html += '<div class="col-md-3">' +
+                        '<div id="visual-preview" class="card" style="min-height: 250px;">' +
+                        '<div class="card-body">' +
+                        '<div class="preview">' +
+                        res.visuals[i].visual +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+                console.log($('#listVisuals_'+category));
+                console.log(html);
+                console.log(category);
+                // if (category === 3) {
+                $('#listVisuals_'+category).html(html);
+                // } else if (category === 2) {
+                //     $('#listVisuals_sms').html(html);
+                // } else {
+                //     $('#listVisuals_email').html(html);
+                // }
 
-        },
-        error: function (request, status, error) {
-            toastr.error(error.message, 'Error');
-        },
-        complete: function () {
-            $('html').css('cursor', 'default');
-        },
-        dataType: 'json'
-    });
+            },
+            error: function (request, status, error) {
+                toastr.error(error.message, 'Error');
+            },
+            complete: function () {
+                $('html').css('cursor', 'default');
+            },
+            dataType: 'json'
+        });
+    }
+
 }
 

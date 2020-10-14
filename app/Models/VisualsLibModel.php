@@ -10,6 +10,7 @@ class VisualsLibModel extends Model
     protected $dbCategory = 'visuals_categories';
     protected $dbCompany_feat = 'visuals_company_features';
     protected $dbVisuals = 'visuals';
+    protected $dbVisualsFeatures = ' visuals_to_features';
     protected $db;
 
     /*
@@ -173,15 +174,15 @@ class VisualsLibModel extends Model
         $visualLabel = 'Visual code / url';
         $visualType = 'textarea';
         if (!empty($data['category'])):
-                switch ($data['category']):
-                    case 1:
-                        $visualLabel = 'Email HTML code';
-                        break;
-                    case 2:
-                        $visualLabel = 'SMS Text';
-                        $visualRules .= '|max_length[140]';
-                        break;
-                endswitch;
+            switch ($data['category']):
+                case 1:
+                    $visualLabel = 'Email HTML code';
+                    break;
+                case 2:
+                    $visualLabel = 'SMS Text';
+                    $visualRules .= '|max_length[140]';
+                    break;
+            endswitch;
         endif;
         $form = [
             'main_company_id' => [
@@ -249,7 +250,7 @@ class VisualsLibModel extends Model
                 $visualRules = '|max_length[140]';
                 $rules_url_sms = 'required|valid_url|regex_match[/^(?:([^:]*)\:)?\/\/(.+)$/]';
                 $addID = ['id' => 'visual-sms'];
-            break;
+                break;
             default:
                 break;
         endswitch;
@@ -349,7 +350,7 @@ class VisualsLibModel extends Model
      * @param type $data
      * @return array
      */
-    public function form_features($features, $data = false)
+    public function form_features($features, $data = false, $company_id)
     {
 
         $assocFeatures = [];
@@ -358,11 +359,17 @@ class VisualsLibModel extends Model
                 $assocFeatures[$value['id_client_feature']] = $value['name'];
             }
         }
-
+        $selected = isset($data['id_visual']) ? $this->getVisualFeatures($data['id_visual'], $company_id) : false;
+        $post = [];
+        if ($selected){
+            foreach( $selected as $key => $value) {
+                $post[] = $value['id_client_feature'];
+            }
+        }
         return[
             'field' => 'id_client_feature',
             'label' => trad('Features'),
-            'post' => isset($data['id_client_feature']) ? $data['id_client_feature'] : '',
+            'post' => $post ? $post : '',
             'options' => $assocFeatures,
             'rules' => 'required'
         ];
@@ -377,24 +384,27 @@ class VisualsLibModel extends Model
     {
         $retour = false;
         $builder = $this->db->table($this->dbVisuals);
-
         if (isset($data['features'])):
             $builder->select('visuals.*');
             $builder->join('visuals_to_features', 'visuals_to_features.id_visual = visuals.id_visual');
             $builder->whereIn('visuals_to_features.id_client_feature', $data['features']);
         endif;
 
+        if (isset($data['category'])):
+            $builder->where('category', $data['category']);
+        endif;
+
         if (isset($data['id_visual'])):
-            $builder->where('visuals.id_visual', $data['id_visual']);
+            $builder->where('id_visual', $data['id_visual']);
         endif;
         if (isset($data['id_company'])):
-            $builder->where('visuals.id_company', $data['id_company']);
+            $builder->where('id_company', $data['id_company']);
         endif;
         if (isset($data['id_category'])):
-            $builder->where('visuals.id_category', $data['id_category']);
+            $builder->where('id_category', $data['id_category']);
         endif;
         if (isset($data['id_user'])):
-            $builder->where('id_user', $data['id_user']);
+            $builder->where('id_category', $data['id_user']);
         endif;
 
         $query = $builder->get();
@@ -536,7 +546,7 @@ class VisualsLibModel extends Model
 
                 if ($regen || empty($visual['thumbnail'])):
                     if ($thumb_api = $this->create_url_thumbnails($visual['visual'], $is_mobile, $regen)):
-                    
+
                         //On enregistre l'image
                         $content_img = file_get_contents($thumb_api['url']);
                         $img_name = url_title($visual['name']) . '-' . $visual['id_visual'] . '.jpg';
@@ -566,5 +576,28 @@ class VisualsLibModel extends Model
                 break;
         endswitch;
         return $return;
+    }
+
+    public function saveVisualFeatures($post, $id_visual)
+    {
+        $this->db->table($this->dbVisualsFeatures)->delete(['id_visual' => $id_visual]);
+        $inserted =$this->db->table($this->dbVisualsFeatures)->insertBatch($post);
+        return $inserted ? true : false;
+    }
+
+    /**
+     * Get Company Features
+     * @param type $data
+     */
+    public function getVisualFeatures($id_visual, $company_id)
+    {
+        $columns = 'visuals_company_features.*';
+        $builder = $this->db->table($this->dbVisualsFeatures);
+        $result = $builder->select($columns)
+            ->join('visuals_company_features', 'visuals_company_features.id_client_feature=visuals_to_features.	id_client_feature')
+            ->where(['visuals_company_features.main_company_id' => $company_id, 'visuals_to_features.id_visual' => $id_visual])
+            ->get()
+            ->getResultArray();
+        return $result ? $result : false ;
     }
 }
