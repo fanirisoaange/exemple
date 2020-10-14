@@ -1327,6 +1327,7 @@ CREATE TABLE `visuals` (
                            `active` tinyint(1) NOT NULL,
                            `created` int unsigned NOT NULL,
                            `updated` int unsigned NOT NULL,
+                           `category` tinyint(1) NOT NULL,
                            PRIMARY KEY (`id_visual`),
                            KEY `visuals_id_company_foreign` (`id_company`),
                            KEY `visuals_id_category_foreign` (`id_category`),
@@ -1340,7 +1341,7 @@ CREATE TABLE `visuals` (
 
 LOCK TABLES `visuals` WRITE;
 /*!40000 ALTER TABLE `visuals` DISABLE KEYS */;
-INSERT INTO `visuals` VALUES (1,2,17,1,'Landing Test','Produits de beauté','https://www.enquete-shopping.com/landing/produits_beaute.html','',0,0,1588771498,0);
+INSERT INTO `visuals` VALUES (1,2,17,1,'Landing Test','Produits de beauté','https://www.enquete-shopping.com/landing/produits_beaute.html','',0,0,1588771498,0,1);
 /*!40000 ALTER TABLE `visuals` ENABLE KEYS */;
 UNLOCK TABLES;
 
