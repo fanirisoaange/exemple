@@ -139,7 +139,6 @@ class Visualslib extends BaseController
     public function manage($id_visual = false)
     {
         $post = $this->request->getPost();
-//        var_dump($post);die;
         $thumbnail = false;
         $category = false;
         //EDit visual
@@ -168,24 +167,19 @@ class Visualslib extends BaseController
         $form_visual = $this->VLM->formVisual($data_visual);
         $formVisualCode = $this->VLM->formVisualCode($category, $data_visual);
 
+        /**
+         * Features
+         */
+        $features = $this->VLM->getCompanyFeatures(['main_company_id' => $this->session->current_main_company]);
+        $form_features = $this->VLM->form_visual_features($features, $post);
+        $form_features2 = $this->VLM->form_features($features, $data_visual, $this->session->current_main_company);
         if (isset($post['add_visual'])):
-            if ($this->validate($form_visual + $formVisualCode)):
+            if ($this->validate($form_visual + $formVisualCode) && isset($data_visual['features'])):
                 $upd_id = !empty($post['id_visual']) ? ['id_visual' => $post['id_visual']] : false;
-//                echo '<p style="background-color:#fff; color:#000; margin: 50px">';
-//                              print_r($post);
-//                                echo '</p>';
-                $visual_to_features= array();
+                $post['id_company'] = $post['main_company_id'];
                 $send = $this->utils->insertOrUpdate($post, 'visuals', $upd_id);
                 if ($send['action'] == 'insert' && !empty($send['insertId'])):
-                    foreach ($post['features'] as $key => $value){
-                        $visual_to_features[] =[
-                            'id_visual' => $send['insertId'],
-                            'id_client_feature' => $value,
-                            'created' => '',
-                            'updated' => ''
-                        ];
-                    }
-                    $saved = $this->VLM->saveVisualFeatures($visual_to_features, $send['insertId']);
+                    $saved = $this->VLM->saveVisualFeatures($send['insertId'], $post);
                     if($saved) :
                         return redirect()->to(route_to('visual_manage') . '/' . $send['insertId']);
                     endif;
@@ -196,15 +190,6 @@ class Visualslib extends BaseController
         endif;
 //        echo $this->validation->listErrors() ;
 
-        /**
-         * Features
-         */
-        $features = $this->VLM->getCompanyFeatures(['main_company_id' => $this->session->current_main_company]);
-        $form_features = $this->VLM->form_visual_features($features, $post);
-//        echo '<p style="background-color:#fff; color:#000; margin: 50px">';
-//                              print_r($data_visual);
-//                                echo '</p>';
-        $form_features2 = $this->VLM->form_features($features, $data_visual, $this->session->current_main_company);
         /**
          * Visibility
          */

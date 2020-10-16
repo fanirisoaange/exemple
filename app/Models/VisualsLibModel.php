@@ -264,14 +264,14 @@ class VisualsLibModel extends Model
                 'options' => VisualCategories::getAll(),
                 'extra' => ['class' => 'custom-select select2'],
             ],
-            'sms_url' => [
-                'field' => 'sms_url',
-                'label' => 'SMS URL',
-                'post' => isset($data['sms_url']) ? $data['sms_url'] : '',
-                'rules' => $rules_url_sms,
-                'type' => $visualType,
-                'addID' => $addID
-            ],
+//            'sms_url' => [
+//                'field' => 'sms_url',
+//                'label' => 'SMS URL',
+//                'post' => isset($data['sms_url']) ? $data['sms_url'] : '',
+//                'rules' => $rules_url_sms,
+//                'type' => $visualType,
+//                'addID' => $addID
+//            ],
             'visual' => [
                 'field' => 'visual',
                 'label' => $visualLabel,
@@ -359,19 +359,26 @@ class VisualsLibModel extends Model
                 $assocFeatures[$value['id_client_feature']] = $value['name'];
             }
         }
-        $selected = isset($data['id_visual']) ? $this->getVisualFeatures($data['id_visual'], $company_id) : false;
-        $post = [];
-        if ($selected){
-            foreach( $selected as $key => $value) {
-                $post[] = $value['id_client_feature'];
+        if (isset($data['id_visual'])) {
+            $selected = $this->getVisualFeatures($data['id_visual'], $company_id) ;
+            $post = [];
+            if ($selected){
+                foreach( $selected as $key => $value) {
+                    $post[] = $value['id_client_feature'];
+                }
             }
+        } else {
+            $post = isset($data['features']) ? $data['features'] : [];
         }
+
         return[
-            'field' => 'id_client_feature',
-            'label' => trad('Features'),
-            'post' => $post ? $post : '',
-            'options' => $assocFeatures,
-            'rules' => 'required'
+            'visual_feature' => [
+                'field' => 'id_client_feature',
+                'label' => trad('Features'),
+                'post' => $post ? $post : '',
+                'options' => $assocFeatures,
+                'rules' => 'required'
+            ]
         ];
     }
 
@@ -578,10 +585,19 @@ class VisualsLibModel extends Model
         return $return;
     }
 
-    public function saveVisualFeatures($post, $id_visual)
+    public function saveVisualFeatures($id_visual, $post)
     {
+        $visual_to_features= array();
+        foreach ($post['features'] as $key => $value){
+            $visual_to_features[] =[
+                'id_visual' => $id_visual,
+                'id_client_feature' => $value,
+                'created' => time(),
+                'updated' => ''
+            ];
+        }
         $this->db->table($this->dbVisualsFeatures)->delete(['id_visual' => $id_visual]);
-        $inserted =$this->db->table($this->dbVisualsFeatures)->insertBatch($post);
+        $inserted =$this->db->table($this->dbVisualsFeatures)->insertBatch($visual_to_features);
         return $inserted ? true : false;
     }
 

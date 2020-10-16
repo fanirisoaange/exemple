@@ -131,7 +131,7 @@ function changeVisualByIdCategory(elem, data) {
             });
 
         } else {
-            $('.summernote').summernote('destroy')
+            $('.summernote').summernote('destroy');
         }
     }
 }
@@ -169,7 +169,7 @@ function getPreview(data, elem) {
         id_visual: data.id_visual,
         category: data.category,
         visual: data.visual,
-        sms_url: data.sms_url,
+        // sms_url: data.sms_url,
         name: data.name,
         action: 'generateVisualThumbnail'
     };
@@ -198,11 +198,7 @@ function getVisualByAjax(category) {
     var features;
     var html = '';
     var id = '#listVisuals_' + category;
-    // if (category === 3) {
     features = $("select[name=features_" + category + "]").val();
-    // } else if (category === 2) {
-    //     features = $('select[name="features_sms"]').val();
-    // }
 
     features = (features) ? features.join(",") : null;
 
@@ -227,18 +223,7 @@ function getVisualByAjax(category) {
                     '</div>' +
                     '</div>';
             }
-
-            console.log('id : ' + id);
-            console.log('html : ' + html);
-            //console.log(category);
-            // if (category === 3) {
             $(id).html(html);
-            // } else if (category === 2) {
-            //     $('#listVisuals_sms').html(html);
-            // } else {
-            //     $('#listVisuals_email').html(html);
-            // }
-
         },
         error: function (request, status, error) {
             toastr.error(error.message, 'Error');

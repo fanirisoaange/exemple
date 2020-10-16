@@ -1,6 +1,6 @@
 <?php if (!empty(Session()->get('current_main_company'))): ?>
     <?php //if (Session()->get('current_main_company') == $form_visual['main_company_id']['post']): ?>
-    <hr class="mt-0"/>
+    <hr class="mt-0" />
     <h2><?= $action == 'add' ? trad('Add visual') : trad('Edit visual') ?></h2>
     <div class="row">
         <div class="col-md-8">
@@ -11,9 +11,8 @@
                     $hiddens = [
                         'id_user' => session()->get('user_id'),
                         'visibility' => 0,
-                        $form_visual['main_company_id']['field'] => $form_visual['main_company_id']['post']
+                        $form_visual['main_company_id']['field'] => $form_visual['main_company_id']['post'],
                     ]
-
                     ?>
                     <?php
                     if ($action == 'edit'):
@@ -24,8 +23,9 @@
                     <?= form_open('', ['id' => 'visual-form'], $hiddens) ?>
                     <?= custom_input($form_visual['name'], ['class' => 'form-control']) ?>
                     <?= form_label(trad('Features')) ?>
-                    <?= form_dropdown('features[]', $form_feat['options'], $form_feat['post'], 'class="form-control select2" id="features" multiple') ?>
-                    <?= form_hidden('defaultFeatures', $form_feat['post']) ?>
+                    <?= form_dropdown('features[]', $form_feat['visual_feature']['options'], $form_feat['visual_feature']['post'],'class="form-control select2" id="features" multiple') ?>
+                    <small class="help-block"><i><span style="color:red;">*</span><?= trad("Please choose features") ?></i></small>
+                    <?= form_hidden('defaultFeatures', $form_feat['visual_feature']['post']) ?>
                     <?= custom_dropdown($formVisualCode['category'], ['id' => 'visual_category', 'class' => 'select2 custom-select']) ?>
                     <?php
                     if ($formVisualCode['visual']['type'] == 'textarea'):
@@ -41,7 +41,6 @@
                     endif;
 
                     ?>
-                    <?= custom_input($formVisualCode['sms_url'], ['class' => 'form-control']) ?>
                     <div id="visual-field-textarea" class="visual-field"<?= $display_textarea ?>>
 
                         <div class="form-group">
@@ -66,26 +65,10 @@
                             <span class="clearfix"></span>
                             <?= form_textarea($formVisualCode['visual']['field'], $formVisualCode['visual']['post'], ['id' => 'visual', 'class' => 'form-control summernote' . $classError]) ?>
                             <?= $validation->showError($formVisualCode['visual']['field']); ?>
-                            <small class="form-text text-muted">
-                                <span id="sms-remaining"></span>
-                                <span id="sms-message"></span>
-                            </small>
+                            <small class="form-text text-muted"><span id="sms-remaining"></span> <span id="sms-message"></span></small>
                         </div>
                     </div>
-                    <!--div class="card-body card-body-content" style="display: block;padding: 15px;">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <?= form_label(trad('Html')) ?><span class="text-red">*</span>
-                                    <textarea name="html" id=""
-                                              class="form-control summernote"
-                                              cols="30" rows="10">
-                                        <?= ""; ?>
-                                    </textarea>
-                                </div>
-                            </div>
-                        </div>
-                        </div-->
+
                     <div id="visual-field-text" class="visual-field"<?= $display_text ?>>
                         <?= custom_input($formVisualCode['visual'], ['class' => 'form-control'] + $disabled_text) ?>
                     </div>
@@ -170,11 +153,11 @@
         </div>
     </div>
     <?php //else: ?>
-    <div class="card card-danger card-outline">
-        <div class="card-body text-danger">
-            <?= trad('Forbidden') ?>
-        </div>
-    </div>
+    <!--        <div class="card card-danger card-outline">-->
+    <!--            <div class="card-body text-danger">-->
+    <!--                --><?//= trad('Forbidden') ?>
+    <!--            </div>-->
+    <!--        </div>-->
     <?php //endif; ?>
 <?php else: ?>
     <div class="card card-primary card-outline">
